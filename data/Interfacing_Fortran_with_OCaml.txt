@@ -1,0 +1,13 @@
+Interfacing Fortran with OCaml
+
+While OCaml is still one of the best overall programming languages, it is syntactically slightly inconvenient and gets a bit slow for tight numerical routines, especially if they are written in a functional style. Written in imperative style, compiled Ocaml numerical code usually is 2-3 times slower than single-core C,C or Fortran, and therefore usable and much faster than Python or Cython, but optimized, CPU-tuned Fortran can be faster and uses less memory. Fortran, with its native support for arrays of any reasonable rank, built-in bounds checking, vectorized operations and rich intrinsics remains the best programming language for such code. But it remains cumbersome as a general-purpose or systems programming language.
+
+Using CTypes it is possible to easily call Fortran routines from OCaml, provided a few compilation and linking tricks described here are known. This combination of OCaml and Fortran provides, in my opinion, the best small-to-medium scale platform for production-quality scientific computing.
+
+While writing OCaml bindings to call C isn't too hard, it's easy to make mistakes and it's a repetitive procedure. If one wants to call Fortran code, then one would have to write C stub code to be called from OCaml, that would call Fortran. This is three languages to deal with, which becomes annoying. Using CTypes we don't have to write any stub code.
+
+This approach can also be used to get access to LAPACK routines for which Lacaml bindings are not availble, such as dgglse. This goes into a file called accel.f90 .
+
+The min_dist(m,a,d_min,i_min) function takes as inputs the number of points m , the coordinate array a which must have m rows and 3 columns. Note that we have used iso_fortran_env to get the proper Fortran real kind c_double that matches C doubles and therefore the Bigarray float64 kind. As outputs it puts the minimum distance into d_min and the row numbers of a pair of points having that minimum distance in i_min . It does not make use of the norm2 Fortran intrinsics.
+
+Since Fortran, by default, passes everything by reference, you have to use the attribute value on arguments unless you want to box and debox them from your little OCaml wrapper.
