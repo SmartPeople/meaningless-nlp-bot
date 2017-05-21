@@ -64,3 +64,11 @@ https://wordnet.princeton.edu/
 Russian WordNet list
 
 https://nlpub.ru/WordNet
+
+
+#Projects
+
+https://github.com/tensorflow/models/tree/master/textsum
+
+https://github.com/udibr/headlines
+
